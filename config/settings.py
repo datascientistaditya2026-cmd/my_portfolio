@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-h$kfj49r9$uuw!d$t)gsf@e00w(_7gy!3i^g$rsjci8+@*hgk9
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
+    "www-aditya-portfolio-com.onrender.com",
     "localhost",
+    "127.0.0.1",
 ]
 
 
