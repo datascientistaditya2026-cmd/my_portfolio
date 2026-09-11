@@ -1,0 +1,496 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Skills | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            margin-top: 6px;
+            color: #9ca3af;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-edit {
+            background: #374151;
+            color: white;
+            padding: 8px 14px;
+        }
+
+        .btn-edit:hover {
+            background: #4b5563;
+        }
+
+        .btn-delete {
+            background: #7f1d1d;
+            color: white;
+            padding: 8px 14px;
+        }
+
+        .btn-delete:hover {
+            background: #991b1b;
+        }
+
+        .skills-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .skills-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .skills-table th,
+        .skills-table td {
+            padding: 16px 18px;
+            text-align: left;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .skills-table th {
+            background: #0f172a;
+            color: #9ca3af;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .skills-table td {
+            color: #e5e7eb;
+        }
+
+        .skill-name {
+            font-weight: 600;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #312e81;
+            color: #c7d2fe;
+            font-size: 12px;
+        }
+
+        .order-badge {
+            display: inline-block;
+            min-width: 28px;
+            text-align: center;
+            padding: 5px 8px;
+            border-radius: 6px;
+            background: #1f2937;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .empty-state h3 {
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 800px) {
+
+            .page-content {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .skills-card {
+                overflow-x: auto;
+            }
+
+            .skills-table {
+                min-width: 750px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}"
+           class="active">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}">
+            Projects
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+
+            View Portfolio
+
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Skills
+                </h1>
+
+                <p>
+                    Manage your technical skills and expertise.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'skill_create' %}"
+               class="btn btn-primary">
+
+                + Add Skill
+
+            </a>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- SKILLS TABLE -->
+
+        <div class="skills-card">
+
+            {% if skills %}
+
+                <table class="skills-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Skill
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Icon
+                            </th>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for skill in skills %}
+
+                            <tr>
+
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="skill-name">
+                                        {{ skill.name }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="category-badge">
+                                        {{ skill.get_category_display }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if skill.description %}
+
+                                        {{ skill.description }}
+
+                                    {% else %}
+
+                                        <span style="color:#6b7280;">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if skill.icon %}
+
+                                        {{ skill.icon }}
+
+                                    {% else %}
+
+                                        <span style="color:#6b7280;">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="order-badge">
+                                        {{ skill.order }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="actions">
+
+
+                                        <!-- EDIT -->
+
+                                        <a href="{% url 'skill_edit' skill.pk %}"
+                                           class="btn btn-edit">
+
+                                            Edit
+
+                                        </a>
+
+
+                                        <!-- DELETE -->
+
+                                        <form method="POST"
+                                              action="{% url 'skill_delete' skill.pk %}"
+                                              onsubmit="return confirm('Are you sure you want to delete this skill?');">
+
+                                            {% csrf_token %}
+
+                                            <button type="submit"
+                                                    class="btn btn-delete">
+
+                                                Delete
+
+                                            </button>
+
+                                        </form>
+
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <h3>
+                        No Skills Found
+                    </h3>
+
+                    <p>
+                        Add your first technical skill to your portfolio.
+                    </p>
+
+                    <br>
+
+                    <a href="{% url 'skill_create' %}"
+                       class="btn btn-primary">
+
+                        + Add First Skill
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
+```

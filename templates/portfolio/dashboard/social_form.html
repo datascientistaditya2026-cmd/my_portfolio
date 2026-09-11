@@ -1,0 +1,533 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ title }} | Portfolio Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/dashboard.css' %}"
+    >
+
+    <style>
+
+        .form-container {
+            max-width: 750px;
+        }
+
+        .form-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border: 1px solid #e5e7eb;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        .help-text {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .field-error {
+            margin-top: 6px;
+            color: #dc2626;
+            font-size: 13px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .cancel-btn {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .icon-preview {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .icon-preview-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        @media (max-width: 650px) {
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .save-btn,
+            .cancel-btn {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                AI
+            </div>
+
+            <div>
+                <h2>Portfolio</h2>
+                <span>Dashboard</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="nav-item"
+            >
+                <span>📊</span>
+                Dashboard
+            </a>
+
+
+            <a
+                href="{% url 'profile_edit' %}"
+                class="nav-item"
+            >
+                <span>👤</span>
+                Profile
+            </a>
+
+
+            <a
+                href="{% url 'skill_list' %}"
+                class="nav-item"
+            >
+                <span>⚡</span>
+                Skills
+            </a>
+
+
+            <a
+                href="{% url 'project_list' %}"
+                class="nav-item"
+            >
+                <span>💻</span>
+                Projects
+            </a>
+
+
+            <a
+                href="{% url 'experience_list' %}"
+                class="nav-item"
+            >
+                <span>💼</span>
+                Experience
+            </a>
+
+
+            <a
+                href="{% url 'education_list' %}"
+                class="nav-item"
+            >
+                <span>🎓</span>
+                Education
+            </a>
+
+
+            <a
+                href="{% url 'certification_list' %}"
+                class="nav-item"
+            >
+                <span>🏆</span>
+                Certifications
+            </a>
+
+
+            <a
+                href="{% url 'social_list' %}"
+                class="nav-item active"
+            >
+                <span>🔗</span>
+                Social Links
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{% url 'home' %}"
+                class="nav-item"
+            >
+                <span>🌐</span>
+                View Portfolio
+            </a>
+
+
+            <a
+                href="{% url 'dashboard_logout' %}"
+                class="nav-item logout-item"
+            >
+                <span>🚪</span>
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div class="page-header">
+
+                <h1>
+                    {{ title }}
+                </h1>
+
+                <p>
+                    Add or update a social media profile.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- FORM -->
+
+        <div class="form-container">
+
+            <div class="form-card">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="{{ form.name.id_for_label }}"
+                        >
+                            Social Platform
+                        </label>
+
+                        {{ form.name }}
+
+                        <div class="help-text">
+                            Example: GitHub, LinkedIn, Kaggle, Twitter
+                        </div>
+
+                        {% if form.name.errors %}
+
+                            <div class="field-error">
+                                {{ form.name.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- URL -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="{{ form.url.id_for_label }}"
+                        >
+                            Profile URL
+                        </label>
+
+                        {{ form.url }}
+
+                        <div class="help-text">
+                            Example: https://github.com/username
+                        </div>
+
+                        {% if form.url.errors %}
+
+                            <div class="field-error">
+                                {{ form.url.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ICON -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="{{ form.icon.id_for_label }}"
+                        >
+                            Icon Class
+                        </label>
+
+                        {{ form.icon }}
+
+                        <div class="help-text">
+                            Example:
+                            fa-brands fa-github
+                        </div>
+
+                        {% if form.icon.errors %}
+
+                            <div class="field-error">
+                                {{ form.icon.errors }}
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="icon-preview">
+
+                            <div class="icon-preview-box">
+
+                                <i id="iconPreview"></i>
+
+                            </div>
+
+                            <div>
+                                Icon Preview
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ORDER -->
+
+                    <div class="form-group">
+
+                        <label
+                            for="{{ form.order.id_for_label }}"
+                        >
+                            Display Order
+                        </label>
+
+                        {{ form.order }}
+
+                        <div class="help-text">
+                            Lower numbers appear first.
+                        </div>
+
+                        {% if form.order.errors %}
+
+                            <div class="field-error">
+                                {{ form.order.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- NON FIELD ERRORS -->
+
+                    {% if form.non_field_errors %}
+
+                        <div class="field-error">
+                            {{ form.non_field_errors }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="save-btn"
+                        >
+                            Save Social Link
+                        </button>
+
+
+                        <a
+                            href="{% url 'social_list' %}"
+                            class="cancel-btn"
+                        >
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- ICON PREVIEW -->
+
+<script>
+
+    const iconInput =
+        document.getElementById(
+            "{{ form.icon.id_for_label }}"
+        );
+
+    const iconPreview =
+        document.getElementById("iconPreview");
+
+
+    function updateIconPreview() {
+
+        if (!iconInput || !iconPreview) {
+            return;
+        }
+
+        iconPreview.className =
+            iconInput.value.trim();
+
+    }
+
+
+    if (iconInput) {
+
+        iconInput.addEventListener(
+            "input",
+            updateIconPreview
+        );
+
+        updateIconPreview();
+
+    }
+
+</script>
+
+</body>
+</html>
+```

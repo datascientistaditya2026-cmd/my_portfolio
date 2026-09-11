@@ -1,0 +1,395 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+        }
+
+        .form-card {
+            max-width: 800px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            background: #0f172a;
+            color: white;
+            border: 1px solid #374151;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .help-text {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .error-list {
+            margin-top: 6px;
+            color: #f87171;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .required-note {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}"
+           class="active">
+
+            Skills
+
+        </a>
+
+        <a href="{% url 'project_list' %}">
+            Projects
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+
+            View Portfolio
+
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <div class="page-header">
+
+            <h1>
+                {{ title }}
+            </h1>
+
+            <p>
+                Add or update a technical skill.
+            </p>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <p class="required-note">
+                Fill in the skill information below.
+            </p>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.name.id_for_label }}">
+                        Skill Name
+                    </label>
+
+                    {{ form.name }}
+
+                    {% if form.name.errors %}
+
+                        <div class="error-list">
+                            {{ form.name.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.category.id_for_label }}">
+                        Category
+                    </label>
+
+                    {{ form.category }}
+
+                    {% if form.category.errors %}
+
+                        <div class="error-list">
+                            {{ form.category.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        Description
+                    </label>
+
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+
+                        <div class="error-list">
+                            {{ form.description.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ICON -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.icon.id_for_label }}">
+                        Icon Class
+                    </label>
+
+                    {{ form.icon }}
+
+                    <div class="help-text">
+                        Example:
+                        fa-brands fa-python
+                    </div>
+
+                    {% if form.icon.errors %}
+
+                        <div class="error-list">
+                            {{ form.icon.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ORDER -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.order.id_for_label }}">
+                        Display Order
+                    </label>
+
+                    {{ form.order }}
+
+                    <div class="help-text">
+                        Lower numbers appear first.
+                    </div>
+
+                    {% if form.order.errors %}
+
+                        <div class="error-list">
+                            {{ form.order.errors }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="actions">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Save Skill
+
+                    </button>
+
+
+                    <a href="{% url 'skill_list' %}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
+```

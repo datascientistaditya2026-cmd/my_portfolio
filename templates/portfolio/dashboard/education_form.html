@@ -1,0 +1,419 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+        }
+
+        .form-card {
+            max-width: 850px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #0f172a;
+            color: white;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        .help-text {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .error-list {
+            color: #f87171;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}">
+            Projects
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}"
+           class="active">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+            View Portfolio
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <h1>
+                {{ title }}
+            </h1>
+
+            <p>
+                Add or update your academic qualification.
+            </p>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="form-grid">
+
+
+                    <!-- DEGREE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.degree.id_for_label }}">
+                            Degree
+                        </label>
+
+                        {{ form.degree }}
+
+                        {% if form.degree.errors %}
+
+                            <div class="error-list">
+                                {{ form.degree.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- INSTITUTION -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.institution.id_for_label }}">
+                            Institution
+                        </label>
+
+                        {{ form.institution }}
+
+                        {% if form.institution.errors %}
+
+                            <div class="error-list">
+                                {{ form.institution.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- START YEAR -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.start_year.id_for_label }}">
+                            Start Year
+                        </label>
+
+                        {{ form.start_year }}
+
+                        {% if form.start_year.errors %}
+
+                            <div class="error-list">
+                                {{ form.start_year.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- END YEAR -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.end_year.id_for_label }}">
+                            End Year
+                        </label>
+
+                        {{ form.end_year }}
+
+                        <div class="help-text">
+                            Leave empty if currently studying.
+                        </div>
+
+                        {% if form.end_year.errors %}
+
+                            <div class="error-list">
+                                {{ form.end_year.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group full">
+
+                        <label for="{{ form.description.id_for_label }}">
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        <div class="help-text">
+                            Add specialization, achievements,
+                            coursework, or other relevant details.
+                        </div>
+
+                        {% if form.description.errors %}
+
+                            <div class="error-list">
+                                {{ form.description.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="actions">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Save Education
+
+                    </button>
+
+
+                    <a href="{% url 'education_list' %}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
+```

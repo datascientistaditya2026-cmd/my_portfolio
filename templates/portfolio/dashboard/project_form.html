@@ -1,0 +1,618 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+        }
+
+        .form-card {
+            max-width: 900px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #0f172a;
+            color: white;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+        }
+
+        .current-image {
+            margin-top: 12px;
+        }
+
+        .current-image img {
+            width: 180px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #374151;
+        }
+
+        .preview-box {
+            margin-top: 12px;
+            display: none;
+        }
+
+        .preview-box img {
+            width: 180px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .error-list {
+            color: #f87171;
+            margin-top: 6px;
+            font-size: 13px;
+        }
+
+        .help-text {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}"
+           class="active">
+
+            Projects
+
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+
+            View Portfolio
+
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <h1>
+                {{ title }}
+            </h1>
+
+            <p>
+                Add or update your portfolio project.
+            </p>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+
+                <div class="form-grid">
+
+
+                    <!-- TITLE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.title.id_for_label }}">
+                            Project Title
+                        </label>
+
+                        {{ form.title }}
+
+                        {% if form.title.errors %}
+                            <div class="error-list">
+                                {{ form.title.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.category.id_for_label }}">
+                            Category
+                        </label>
+
+                        {{ form.category }}
+
+                        {% if form.category.errors %}
+                            <div class="error-list">
+                                {{ form.category.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group full">
+
+                        <label for="{{ form.description.id_for_label }}">
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+                            <div class="error-list">
+                                {{ form.description.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- IMAGE -->
+
+                    <div class="form-group full">
+
+                        <label>
+                            Project Image
+                        </label>
+
+                        {{ form.image }}
+
+                        {% if project and project.image %}
+
+                            <div class="current-image">
+
+                                <p>
+                                    Current Image
+                                </p>
+
+                                <img
+                                    src="{{ project.image.url }}"
+                                    alt="{{ project.title }}"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="preview-box"
+                             id="previewBox">
+
+                            <p>
+                                New Image Preview
+                            </p>
+
+                            <img id="imagePreview"
+                                 src=""
+                                 alt="Preview">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TECHNOLOGIES -->
+
+                    <div class="form-group full">
+
+                        <label for="{{ form.technologies.id_for_label }}">
+                            Technologies
+                        </label>
+
+                        {{ form.technologies }}
+
+                        <div class="help-text">
+                            Separate technologies with commas.
+                            Example: Python, YOLO, OpenCV, Django
+                        </div>
+
+                        {% if form.technologies.errors %}
+                            <div class="error-list">
+                                {{ form.technologies.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- GITHUB -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.github_url.id_for_label }}">
+                            GitHub URL
+                        </label>
+
+                        {{ form.github_url }}
+
+                        {% if form.github_url.errors %}
+                            <div class="error-list">
+                                {{ form.github_url.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- LIVE URL -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.live_url.id_for_label }}">
+                            Live Project URL
+                        </label>
+
+                        {{ form.live_url }}
+
+                        {% if form.live_url.errors %}
+                            <div class="error-list">
+                                {{ form.live_url.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- FEATURED -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Featured Project
+                        </label>
+
+                        <div class="checkbox-group">
+
+                            {{ form.featured }}
+
+                            <label for="{{ form.featured.id_for_label }}">
+                                Show this project as Featured
+                            </label>
+
+                        </div>
+
+                        {% if form.featured.errors %}
+                            <div class="error-list">
+                                {{ form.featured.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ORDER -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.order.id_for_label }}">
+                            Display Order
+                        </label>
+
+                        {{ form.order }}
+
+                        <div class="help-text">
+                            Lower numbers appear first.
+                        </div>
+
+                        {% if form.order.errors %}
+                            <div class="error-list">
+                                {{ form.order.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="actions">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Save Project
+
+                    </button>
+
+
+                    <a href="{% url 'project_list' %}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- IMAGE PREVIEW -->
+
+<script>
+
+    const imageInput =
+        document.getElementById("id_image");
+
+    const previewBox =
+        document.getElementById("previewBox");
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (file) {
+
+                    const reader =
+                        new FileReader();
+
+                    reader.onload =
+                        function (event) {
+
+                            imagePreview.src =
+                                event.target.result;
+
+                            previewBox.style.display =
+                                "block";
+
+                        };
+
+                    reader.readAsDataURL(file);
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
+```

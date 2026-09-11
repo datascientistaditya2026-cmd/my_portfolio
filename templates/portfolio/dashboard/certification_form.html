@@ -1,0 +1,585 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ title }} | Portfolio Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/dashboard.css' %}"
+    >
+
+    <style>
+
+        .form-container {
+            max-width: 850px;
+        }
+
+        .form-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border: 1px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        .field-error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .help-text {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .current-image {
+            margin-top: 12px;
+        }
+
+        .current-image img {
+            width: 250px;
+            max-width: 100%;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .image-preview img {
+            width: 250px;
+            max-width: 100%;
+            border-radius: 10px;
+            border: 2px solid #6366f1;
+        }
+
+        .preview-label {
+            margin-bottom: 8px;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+        }
+
+        @media (max-width: 650px) {
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .save-btn,
+            .cancel-btn {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                AI
+            </div>
+
+            <div>
+                <h2>Portfolio</h2>
+                <span>Dashboard</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="nav-item"
+            >
+                <span>📊</span>
+                Dashboard
+            </a>
+
+
+            <a
+                href="{% url 'profile_edit' %}"
+                class="nav-item"
+            >
+                <span>👤</span>
+                Profile
+            </a>
+
+
+            <a
+                href="{% url 'skill_list' %}"
+                class="nav-item"
+            >
+                <span>⚡</span>
+                Skills
+            </a>
+
+
+            <a
+                href="{% url 'project_list' %}"
+                class="nav-item"
+            >
+                <span>💻</span>
+                Projects
+            </a>
+
+
+            <a
+                href="{% url 'experience_list' %}"
+                class="nav-item"
+            >
+                <span>💼</span>
+                Experience
+            </a>
+
+
+            <a
+                href="{% url 'education_list' %}"
+                class="nav-item"
+            >
+                <span>🎓</span>
+                Education
+            </a>
+
+
+            <a
+                href="{% url 'certification_list' %}"
+                class="nav-item active"
+            >
+                <span>🏆</span>
+                Certifications
+            </a>
+
+
+            <a
+                href="{% url 'social_list' %}"
+                class="nav-item"
+            >
+                <span>🔗</span>
+                Social Links
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{% url 'home' %}"
+                class="nav-item"
+            >
+                <span>🌐</span>
+                View Portfolio
+            </a>
+
+
+            <a
+                href="{% url 'dashboard_logout' %}"
+                class="nav-item logout-item"
+            >
+                <span>🚪</span>
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="dashboard-main">
+
+
+        <header class="dashboard-header">
+
+            <div class="page-header">
+
+                <h1>
+                    {{ title }}
+                </h1>
+
+                <p>
+                    Add or update your professional certification.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- FORM -->
+
+        <div class="form-container">
+
+            <div class="form-card">
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.name.id_for_label }}">
+                            Certification Name
+                        </label>
+
+                        {{ form.name }}
+
+                        {% if form.name.errors %}
+                            <div class="field-error">
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ORGANIZATION -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.organization.id_for_label }}">
+                            Organization
+                        </label>
+
+                        {{ form.organization }}
+
+                        {% if form.organization.errors %}
+                            <div class="field-error">
+                                {{ form.organization.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ISSUE DATE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.issue_date.id_for_label }}">
+                            Issue Date
+                        </label>
+
+                        {{ form.issue_date }}
+
+                        {% if form.issue_date.errors %}
+                            <div class="field-error">
+                                {{ form.issue_date.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CREDENTIAL URL -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.credential_url.id_for_label }}">
+                            Credential URL
+                        </label>
+
+                        {{ form.credential_url }}
+
+                        <div class="help-text">
+                            Add the verification or credential link.
+                        </div>
+
+                        {% if form.credential_url.errors %}
+                            <div class="field-error">
+                                {{ form.credential_url.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CERTIFICATE IMAGE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.certificate_image.id_for_label }}">
+                            Certificate Image
+                        </label>
+
+                        {{ form.certificate_image }}
+
+                        <div class="help-text">
+                            Upload your certificate image.
+                        </div>
+
+
+                        {% if form.certificate_image.errors %}
+
+                            <div class="field-error">
+                                {{ form.certificate_image.errors }}
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- CURRENT IMAGE -->
+
+                        {% if certification and certification.certificate_image %}
+
+                            <div class="current-image">
+
+                                <p>
+                                    <strong>
+                                        Current Certificate:
+                                    </strong>
+                                </p>
+
+                                <img
+                                    src="{{ certification.certificate_image.url }}"
+                                    alt="Current certificate"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- NEW IMAGE PREVIEW -->
+
+                        <div
+                            class="image-preview"
+                            id="imagePreview"
+                        >
+
+                            <div class="preview-label">
+                                New Certificate Preview
+                            </div>
+
+                            <img
+                                id="previewImage"
+                                src=""
+                                alt="Certificate preview"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FORM ERRORS -->
+
+                    {% if form.non_field_errors %}
+
+                        <div class="field-error">
+
+                            {{ form.non_field_errors }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="save-btn"
+                        >
+                            Save Certification
+                        </button>
+
+
+                        <a
+                            href="{% url 'certification_list' %}"
+                            class="cancel-btn"
+                        >
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- IMAGE PREVIEW SCRIPT -->
+
+<script>
+
+    const imageInput =
+        document.getElementById(
+            "{{ form.certificate_image.id_for_label }}"
+        );
+
+    const previewContainer =
+        document.getElementById("imagePreview");
+
+    const previewImage =
+        document.getElementById("previewImage");
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+
+                previewContainer.style.display = "none";
+                previewImage.src = "";
+
+                return;
+
+            }
+
+
+            if (!file.type.startsWith("image/")) {
+
+                previewContainer.style.display = "none";
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = function (event) {
+
+                previewImage.src =
+                    event.target.result;
+
+                previewContainer.style.display =
+                    "block";
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,425 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Education | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-edit {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4b5563;
+        }
+
+        .btn-delete {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #991b1b;
+        }
+
+        .education-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .education-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .education-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .degree {
+            font-size: 21px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 7px;
+        }
+
+        .institution {
+            color: #818cf8;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .year-badge {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 8px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            height: fit-content;
+            font-size: 13px;
+        }
+
+        .education-description {
+            margin-top: 18px;
+            color: #9ca3af;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #1f2937;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty-state {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .empty-state h2 {
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-content {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .education-header {
+                flex-direction: column;
+            }
+
+            .year-badge {
+                width: fit-content;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}">
+            Projects
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}"
+           class="active">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+            View Portfolio
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Education
+                </h1>
+
+                <p>
+                    Manage your academic qualifications.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'education_create' %}"
+               class="btn btn-primary">
+
+                + Add Education
+
+            </a>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- EDUCATION -->
+
+        {% if education %}
+
+            <div class="education-list">
+
+                {% for item in education %}
+
+                    <div class="education-card">
+
+
+                        <div class="education-header">
+
+                            <div>
+
+                                <div class="degree">
+                                    {{ item.degree }}
+                                </div>
+
+                                <div class="institution">
+                                    {{ item.institution }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="year-badge">
+
+                                {{ item.start_year }}
+
+                                -
+
+                                {% if item.end_year %}
+
+                                    {{ item.end_year }}
+
+                                {% else %}
+
+                                    Present
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        {% if item.description %}
+
+                            <div class="education-description">
+
+                                {{ item.description }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="actions">
+
+                            <a href="{% url 'education_edit' item.pk %}"
+                               class="btn btn-edit">
+
+                                Edit
+
+                            </a>
+
+
+                            <form method="POST"
+                                  action="{% url 'education_delete' item.pk %}"
+                                  onsubmit="return confirm('Are you sure you want to delete this education record?');">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="btn btn-delete">
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h2>
+                    No Education Found
+                </h2>
+
+                <p>
+                    Add your academic qualification to your portfolio.
+                </p>
+
+                <br>
+
+                <a href="{% url 'education_create' %}"
+                   class="btn btn-primary">
+
+                    + Add Education
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
+```

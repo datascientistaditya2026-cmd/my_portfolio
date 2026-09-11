@@ -1,0 +1,508 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+        }
+
+        .form-card {
+            max-width: 900px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #0f172a;
+            color: white;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        .help-text {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .error-list {
+            color: #f87171;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-wrapper input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-wrapper label {
+            margin: 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-content {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}">
+            Projects
+        </a>
+
+        <a href="{% url 'experience_list' %}"
+           class="active">
+
+            Experience
+
+        </a>
+
+        <a href="{% url 'education_list' %}">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+
+            View Portfolio
+
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <div class="page-header">
+
+            <h1>
+                {{ title }}
+            </h1>
+
+            <p>
+                Add or update your professional experience.
+            </p>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="form-grid">
+
+
+                    <!-- JOB TITLE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.job_title.id_for_label }}">
+                            Job Title
+                        </label>
+
+                        {{ form.job_title }}
+
+                        {% if form.job_title.errors %}
+
+                            <div class="error-list">
+                                {{ form.job_title.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- COMPANY -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.company.id_for_label }}">
+                            Company
+                        </label>
+
+                        {{ form.company }}
+
+                        {% if form.company.errors %}
+
+                            <div class="error-list">
+                                {{ form.company.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- LOCATION -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.location.id_for_label }}">
+                            Location
+                        </label>
+
+                        {{ form.location }}
+
+                        {% if form.location.errors %}
+
+                            <div class="error-list">
+                                {{ form.location.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- START DATE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.start_date.id_for_label }}">
+                            Start Date
+                        </label>
+
+                        {{ form.start_date }}
+
+                        {% if form.start_date.errors %}
+
+                            <div class="error-list">
+                                {{ form.start_date.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- END DATE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.end_date.id_for_label }}">
+                            End Date
+                        </label>
+
+                        {{ form.end_date }}
+
+                        <div class="help-text">
+                            Leave empty if you are currently working.
+                        </div>
+
+                        {% if form.end_date.errors %}
+
+                            <div class="error-list">
+                                {{ form.end_date.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CURRENTLY WORKING -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Employment Status
+                        </label>
+
+                        <div class="checkbox-wrapper">
+
+                            {{ form.currently_working }}
+
+                            <label for="{{ form.currently_working.id_for_label }}">
+                                I currently work here
+                            </label>
+
+                        </div>
+
+                        {% if form.currently_working.errors %}
+
+                            <div class="error-list">
+                                {{ form.currently_working.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group full">
+
+                        <label for="{{ form.description.id_for_label }}">
+                            Responsibilities / Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+
+                            <div class="error-list">
+                                {{ form.description.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- TECHNOLOGIES -->
+
+                    <div class="form-group full">
+
+                        <label for="{{ form.technologies.id_for_label }}">
+                            Technologies Used
+                        </label>
+
+                        {{ form.technologies }}
+
+                        <div class="help-text">
+                            Separate technologies with commas.
+                            Example: Python, Django, Machine Learning, Docker
+                        </div>
+
+                        {% if form.technologies.errors %}
+
+                            <div class="error-list">
+                                {{ form.technologies.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="actions">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Save Experience
+
+                    </button>
+
+
+                    <a href="{% url 'experience_list' %}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
+```

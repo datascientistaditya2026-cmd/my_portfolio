@@ -1,0 +1,1073 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard | AI/ML Portfolio</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/dashboard.css' %}"
+    >
+
+    <style>
+
+        /* ==============================
+           DASHBOARD POLISH
+        ============================== */
+
+        .dashboard-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .section-title a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        /* ==============================
+           PROFILE STATUS
+        ============================== */
+
+        .profile-status {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .profile-status-content {
+            flex: 1;
+        }
+
+        .profile-status h3 {
+            margin: 0 0 8px;
+            color: #111827;
+        }
+
+        .profile-status p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .progress-container {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 9px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4f46e5;
+            border-radius: 20px;
+        }
+
+        .progress-text {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .profile-action {
+            background: #4f46e5;
+            color: #fff;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+
+        /* ==============================
+           RECENT CARDS
+        ============================== */
+
+        .recent-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .recent-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .recent-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .recent-item:first-child {
+            padding-top: 0;
+        }
+
+        .recent-item h4 {
+            margin: 0 0 5px;
+            color: #111827;
+            font-size: 16px;
+        }
+
+        .recent-item p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .recent-item .badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .empty-recent {
+            color: #9ca3af;
+            font-size: 14px;
+            padding: 10px 0;
+        }
+
+
+        /* ==============================
+           QUICK ACTIONS
+        ============================== */
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .quick-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-3px);
+            border-color: #c7d2fe;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .quick-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 11px;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .quick-card h4 {
+            margin: 0 0 4px;
+            color: #111827;
+        }
+
+        .quick-card p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+
+        /* ==============================
+           PORTFOLIO PREVIEW
+        ============================== */
+
+        .portfolio-preview {
+            background: #111827;
+            color: #fff;
+            border-radius: 18px;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .portfolio-preview h2 {
+            margin: 0 0 8px;
+        }
+
+        .portfolio-preview p {
+            margin: 0;
+            color: #d1d5db;
+        }
+
+        .preview-btn {
+            background: #fff;
+            color: #111827;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 1000px) {
+
+            .quick-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .recent-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-status {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .profile-action {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+
+            .portfolio-preview {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .preview-btn {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-preview {
+                padding: 22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="dashboard-wrapper">
+
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                AI
+            </div>
+
+            <div>
+                <h2>Portfolio</h2>
+                <span>Dashboard</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="nav-item active"
+            >
+                <span>📊</span>
+                Dashboard
+            </a>
+
+
+            <a
+                href="{% url 'profile_edit' %}"
+                class="nav-item"
+            >
+                <span>👤</span>
+                Profile
+            </a>
+
+
+            <a
+                href="{% url 'skill_list' %}"
+                class="nav-item"
+            >
+                <span>⚡</span>
+                Skills
+            </a>
+
+
+            <a
+                href="{% url 'project_list' %}"
+                class="nav-item"
+            >
+                <span>💻</span>
+                Projects
+            </a>
+
+
+            <a
+                href="{% url 'experience_list' %}"
+                class="nav-item"
+            >
+                <span>💼</span>
+                Experience
+            </a>
+
+
+            <a
+                href="{% url 'education_list' %}"
+                class="nav-item"
+            >
+                <span>🎓</span>
+                Education
+            </a>
+
+
+            <a
+                href="{% url 'certification_list' %}"
+                class="nav-item"
+            >
+                <span>🏆</span>
+                Certifications
+            </a>
+
+
+            <a
+                href="{% url 'social_list' %}"
+                class="nav-item"
+            >
+                <span>🔗</span>
+                Social Links
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="{% url 'home' %}"
+                class="nav-item"
+                target="_blank"
+            >
+                <span>🌐</span>
+                View Portfolio
+            </a>
+
+
+            <a
+                href="{% url 'dashboard_logout' %}"
+                class="nav-item logout-item"
+            >
+                <span>🚪</span>
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+    =========================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Manage your AI/ML portfolio from one place.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- ==========================================
+             WELCOME
+        =========================================== -->
+
+        <section class="welcome-card">
+
+            <div>
+
+                <h2>
+                    Welcome back! 👋
+                </h2>
+
+                <p>
+                    Keep your portfolio updated and showcase
+                    your latest AI/ML work.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             STATISTICS
+        =========================================== -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{ profile_count }}
+                    </h3>
+
+                    <p>
+                        Profile
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚡
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{ skill_count }}
+                    </h3>
+
+                    <p>
+                        Skills
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💻
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{ project_count }}
+                    </h3>
+
+                    <p>
+                        Projects
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💼
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{ experience_count }}
+                    </h3>
+
+                    <p>
+                        Experience
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🎓
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{ education_count }}
+                    </h3>
+
+                    <p>
+                        Education
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🏆
+                </div>
+
+                <div>
+
+                    <h3>
+                        {{ certification_count }}
+                    </h3>
+
+                    <p>
+                        Certifications
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ==========================================
+             PROFILE STATUS
+        =========================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-title">
+
+                <h2>
+                    Profile Status
+                </h2>
+
+            </div>
+
+
+            <div class="profile-status">
+
+                <div class="profile-status-content">
+
+                    {% if profile_count > 0 %}
+
+                        <h3>
+                            Your profile is active
+                        </h3>
+
+                        <p>
+                            Your basic portfolio profile has been created.
+                            Keep your information updated.
+                        </p>
+
+                        <div class="progress-container">
+
+                            <div class="progress-bar">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width: 100%;"
+                                ></div>
+
+                            </div>
+
+                            <div class="progress-text">
+                                Profile created — 100%
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <h3>
+                            Complete your profile
+                        </h3>
+
+                        <p>
+                            Add your name, designation, bio,
+                            contact details and profile image.
+                        </p>
+
+                        <div class="progress-container">
+
+                            <div class="progress-bar">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width: 0%;"
+                                ></div>
+
+                            </div>
+
+                            <div class="progress-text">
+                                Profile not created
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <a
+                    href="{% url 'profile_edit' %}"
+                    class="profile-action"
+                >
+                    Edit Profile
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             QUICK ACTIONS
+        =========================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="section-title">
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+            </div>
+
+
+            <div class="quick-grid">
+
+
+                <a
+                    href="{% url 'skill_create' %}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        ⚡
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Add Skill
+                        </h4>
+
+                        <p>
+                            Add a new technical skill
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{% url 'project_create' %}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        💻
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Add Project
+                        </h4>
+
+                        <p>
+                            Showcase a new project
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{% url 'experience_create' %}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        💼
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Add Experience
+                        </h4>
+
+                        <p>
+                            Add work experience
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{% url 'education_create' %}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Add Education
+                        </h4>
+
+                        <p>
+                            Add academic details
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{% url 'certification_create' %}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        🏆
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Add Certification
+                        </h4>
+
+                        <p>
+                            Add a certificate
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    href="{% url 'social_create' %}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        🔗
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Add Social Link
+                        </h4>
+
+                        <p>
+                            Add GitHub or LinkedIn
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             RECENT CONTENT
+        =========================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="recent-grid">
+
+
+                <!-- PROJECTS -->
+
+                <div class="recent-card">
+
+                    <div class="section-title">
+
+                        <h2>
+                            Recent Projects
+                        </h2>
+
+                        <a
+                            href="{% url 'project_list' %}"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    {% if recent_projects %}
+
+                        {% for project in recent_projects %}
+
+                            <div class="recent-item">
+
+                                <h4>
+                                    {{ project.title }}
+                                </h4>
+
+                                <p>
+                                    {{ project.description|truncatechars:90 }}
+                                </p>
+
+                                <span class="badge">
+                                    {{ project.category }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty-recent">
+                            No projects added yet.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- EXPERIENCE -->
+
+                <div class="recent-card">
+
+                    <div class="section-title">
+
+                        <h2>
+                            Recent Experience
+                        </h2>
+
+                        <a
+                            href="{% url 'experience_list' %}"
+                        >
+                            View All
+                        </a>
+
+                    </div>
+
+
+                    {% if recent_experiences %}
+
+                        {% for experience in recent_experiences %}
+
+                            <div class="recent-item">
+
+                                <h4>
+                                    {{ experience.job_title }}
+                                </h4>
+
+                                <p>
+                                    {{ experience.company }}
+                                </p>
+
+                                <span class="badge">
+
+                                    {% if experience.currently_working %}
+                                        Currently Working
+                                    {% else %}
+                                        Experience
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty-recent">
+                            No experience added yet.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             PORTFOLIO PREVIEW
+        =========================================== -->
+
+        <section class="dashboard-section">
+
+            <div class="portfolio-preview">
+
+                <div>
+
+                    <h2>
+                        View Your Portfolio
+                    </h2>
+
+                    <p>
+                        See how your portfolio looks to visitors.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{% url 'home' %}"
+                    target="_blank"
+                    class="preview-btn"
+                >
+                    Open Portfolio →
+                </a>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+</body>
+</html>
+```

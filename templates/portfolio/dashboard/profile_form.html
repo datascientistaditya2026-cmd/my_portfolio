@@ -1,0 +1,639 @@
+```html
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profile | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .form-page {
+            padding: 30px;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header h1 {
+            margin: 0;
+        }
+
+        .form-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 1000px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .form-control {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        .file-input {
+            padding: 10px;
+        }
+
+        .current-image {
+            margin-top: 12px;
+        }
+
+        .current-image img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #6366f1;
+        }
+
+        .current-file {
+            margin-top: 10px;
+        }
+
+        .current-file a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+
+        .error-list {
+            color: #f87171;
+            margin-top: 6px;
+            font-size: 13px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .preview-box {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .preview-box img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #6366f1;
+        }
+
+        @media (max-width: 700px) {
+
+            .form-page {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+        <span>AI</span>
+        <h2>Portfolio</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}" class="active">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}">
+            Projects
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}" target="_blank">
+            View Portfolio
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="dashboard-main">
+
+    <div class="form-page">
+
+
+        <!-- HEADER -->
+
+        <div class="form-header">
+
+            <div>
+
+                <h1>
+                    Profile
+                </h1>
+
+                <p>
+                    Manage your personal and professional information.
+                </p>
+
+            </div>
+
+            <a href="{% url 'dashboard' %}"
+               class="btn btn-secondary">
+
+                ← Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+
+                <div class="form-grid">
+
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.name.id_for_label }}">
+                            Name
+                        </label>
+
+                        {{ form.name }}
+
+                        {% if form.name.errors %}
+
+                            <div class="error-list">
+                                {{ form.name.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DESIGNATION -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.designation.id_for_label }}">
+                            Designation
+                        </label>
+
+                        {{ form.designation }}
+
+                        {% if form.designation.errors %}
+
+                            <div class="error-list">
+                                {{ form.designation.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- BIO -->
+
+                    <div class="form-group full">
+
+                        <label for="{{ form.bio.id_for_label }}">
+                            Professional Bio
+                        </label>
+
+                        {{ form.bio }}
+
+                        {% if form.bio.errors %}
+
+                            <div class="error-list">
+                                {{ form.bio.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- PROFILE IMAGE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Profile Image
+                        </label>
+
+                        {{ form.profile_image }}
+
+                        {% if profile and profile.profile_image %}
+
+                            <div class="current-image">
+
+                                <p>
+                                    Current Image
+                                </p>
+
+                                <img
+                                    src="{{ profile.profile_image.url }}"
+                                    alt="Profile Image"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+                        <div class="preview-box"
+                             id="previewBox">
+
+                            <p>
+                                New Image Preview
+                            </p>
+
+                            <img id="imagePreview"
+                                 src=""
+                                 alt="Preview">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.email.id_for_label }}">
+                            Email
+                        </label>
+
+                        {{ form.email }}
+
+                        {% if form.email.errors %}
+
+                            <div class="error-list">
+                                {{ form.email.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.phone.id_for_label }}">
+                            Phone
+                        </label>
+
+                        {{ form.phone }}
+
+                        {% if form.phone.errors %}
+
+                            <div class="error-list">
+                                {{ form.phone.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- LOCATION -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.location.id_for_label }}">
+                            Location
+                        </label>
+
+                        {{ form.location }}
+
+                        {% if form.location.errors %}
+
+                            <div class="error-list">
+                                {{ form.location.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- GITHUB -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.github_url.id_for_label }}">
+                            GitHub URL
+                        </label>
+
+                        {{ form.github_url }}
+
+                        {% if form.github_url.errors %}
+
+                            <div class="error-list">
+                                {{ form.github_url.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- LINKEDIN -->
+
+                    <div class="form-group">
+
+                        <label for="{{ form.linkedin_url.id_for_label }}">
+                            LinkedIn URL
+                        </label>
+
+                        {{ form.linkedin_url }}
+
+                        {% if form.linkedin_url.errors %}
+
+                            <div class="error-list">
+                                {{ form.linkedin_url.errors }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- RESUME -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Resume
+                        </label>
+
+                        {{ form.resume }}
+
+                        {% if profile and profile.resume %}
+
+                            <div class="current-file">
+
+                                Current Resume:
+
+                                <a href="{{ profile.resume.url }}"
+                                   target="_blank">
+
+                                    View Resume
+
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="form-actions">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        Save Profile
+
+                    </button>
+
+                    <a href="{% url 'dashboard' %}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- IMAGE PREVIEW -->
+
+<script>
+
+    const imageInput =
+        document.getElementById("id_profile_image");
+
+    const previewBox =
+        document.getElementById("previewBox");
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (file) {
+
+                    const reader =
+                        new FileReader();
+
+                    reader.onload =
+                        function (event) {
+
+                            imagePreview.src =
+                                event.target.result;
+
+                            previewBox.style.display =
+                                "block";
+
+                        };
+
+                    reader.readAsDataURL(file);
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
+```

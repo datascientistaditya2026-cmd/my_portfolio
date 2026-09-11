@@ -1,0 +1,544 @@
+```html
+{% load static %}
+{% load portfolio_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Projects | Portfolio Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <style>
+
+        .page-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-edit {
+            background: #374151;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4b5563;
+        }
+
+        .btn-delete {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #991b1b;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .project-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .project-placeholder {
+            height: 190px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .project-body {
+            padding: 20px;
+        }
+
+        .project-category {
+            color: #818cf8;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .project-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .project-description {
+            color: #9ca3af;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .technologies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .tech-tag {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: #312e81;
+            color: #c7d2fe;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            color: #818cf8;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid #1f2937;
+            padding-top: 15px;
+        }
+
+        .project-actions form {
+            margin: 0;
+        }
+
+        .empty-state {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .empty-state h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 1100px) {
+
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .page-content {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>AI</span>
+
+        <h2>Portfolio</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'profile_edit' %}">
+            Profile
+        </a>
+
+        <a href="{% url 'skill_list' %}">
+            Skills
+        </a>
+
+        <a href="{% url 'project_list' %}"
+           class="active">
+
+            Projects
+
+        </a>
+
+        <a href="{% url 'experience_list' %}">
+            Experience
+        </a>
+
+        <a href="{% url 'education_list' %}">
+            Education
+        </a>
+
+        <a href="{% url 'certification_list' %}">
+            Certifications
+        </a>
+
+        <a href="{% url 'social_list' %}">
+            Social Links
+        </a>
+
+        <hr>
+
+        <a href="{% url 'home' %}"
+           target="_blank">
+
+            View Portfolio
+
+        </a>
+
+        <a href="{% url 'dashboard_logout' %}">
+            Logout
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+    <div class="page-content">
+
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Projects
+                </h1>
+
+                <p>
+                    Manage your portfolio projects.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'project_create' %}"
+               class="btn btn-primary">
+
+                + Add Project
+
+            </a>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- PROJECTS -->
+
+        {% if projects %}
+
+            <div class="projects-grid">
+
+                {% for project in projects %}
+
+                    <div class="project-card">
+
+
+                        <!-- IMAGE -->
+
+                        {% if project.image %}
+
+                            <img
+                                src="{{ project.image.url }}"
+                                alt="{{ project.title }}"
+                                class="project-image"
+                            >
+
+                        {% else %}
+
+                            <div class="project-placeholder">
+                                AI
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="project-body">
+
+
+                            <!-- FEATURED -->
+
+                            {% if project.featured %}
+
+                                <div class="featured-badge">
+                                    ★ Featured Project
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- CATEGORY -->
+
+                            <div class="project-category">
+                                {{ project.category }}
+                            </div>
+
+
+                            <!-- TITLE -->
+
+                            <div class="project-title">
+                                {{ project.title }}
+                            </div>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <div class="project-description">
+
+                                {{ project.description|truncatechars:150 }}
+
+                            </div>
+
+
+                            <!-- TECHNOLOGIES -->
+
+                            {% if project.technologies %}
+
+                                <div class="technologies">
+
+
+                                    {% for tech in project.technologies|split_by_comma %}
+
+                                        <span class="tech-tag">
+                                            {{ tech }}
+                                        </span>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- LINKS -->
+
+                            <div class="project-links">
+
+                                {% if project.github_url %}
+
+                                    <a href="{{ project.github_url }}"
+                                       target="_blank"
+                                       class="project-link">
+
+                                        GitHub ↗
+
+                                    </a>
+
+                                {% endif %}
+
+
+                                {% if project.live_url %}
+
+                                    <a href="{{ project.live_url }}"
+                                       target="_blank"
+                                       class="project-link">
+
+                                        Live Demo ↗
+
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ACTIONS -->
+
+                            <div class="project-actions">
+
+                                <a href="{% url 'project_edit' project.pk %}"
+                                   class="btn btn-edit">
+
+                                    Edit
+
+                                </a>
+
+
+                                <form method="POST"
+                                      action="{% url 'project_delete' project.pk %}"
+                                      onsubmit="return confirm('Are you sure you want to delete this project?');">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit"
+                                            class="btn btn-delete">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h2>
+                    No Projects Found
+                </h2>
+
+                <p>
+                    Add your first project to showcase your work.
+                </p>
+
+                <br>
+
+                <a href="{% url 'project_create' %}"
+                   class="btn btn-primary">
+
+                    + Add Project
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
+```
