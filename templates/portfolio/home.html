@@ -69,23 +69,7 @@
                     </p>
                 {% endif %}
 
-                <!-- SOCIAL LINKS -->
-                {% if social_links %}
-                    <div class="social-links">
-                        {% for social in social_links %}
-                            <a href="{{ social.url }}"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               title="{{ social.name }}">
-                                {% if social.icon %}
-                                    <i class="{{ social.icon }}"></i>
-                                {% else %}
-                                    {{ social.name }}
-                                {% endif %}
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                
 
             </div>
 
